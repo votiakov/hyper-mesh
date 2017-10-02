@@ -2,11 +2,13 @@ module ReactiveRecord
   class Broadcast
 
     def self.after_commit(operation, model)
-      puts "\n\n\n\n\n\n\n\nReactiveRecord::Broadcast.after_commit --> \n operation - #{operation} \n model - #{model} \n\n\n\n\n"
+      Rails.logger.info "\n\n\n\n\n\n\n\nReactiveRecord::Broadcast.after_commit --> \n operation - #{operation} \n model - #{model} \n\n\n\n\n"
       Hyperloop::InternalPolicy.regulate_broadcast(model) do |data|
         if !Hyperloop.on_server? && Hyperloop::Connection.root_path
+          Rails.logger.info "\n\n\n send_to_server - operation - #{operation} ::: data - #{data} :::: !Hyperloop.on_server? - #{!Hyperloop.on_server?} ::::: Hyperloop::Connection.root_path - #{Hyperloop::Connection.root_path}\n\n "
           send_to_server(operation, data)
         else
+          Rails.logger.info "\n\n\n SendPacket.run - operation - #{operation} ::: data - #{data} :::: !Hyperloop.on_server? - #{!Hyperloop.on_server?} ::::: Hyperloop::Connection.root_path - #{Hyperloop::Connection.root_path}\n\n "
           SendPacket.run(data, operation: operation)
         end
       end

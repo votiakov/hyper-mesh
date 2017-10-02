@@ -136,19 +136,19 @@ module ActiveRecord
       after_commit :synchromesh_after_destroy, on: [:destroy]
 
       def synchromesh_after_create
-        puts "\n\n\n\n\n\n\n\synchromesh_after_create\n\n\n\n\n"
+        Rails.logger.info "\n\n\n\n\n\n\n synchromesh_after_create\n\n\n\n\n"
         return if do_not_synchronize? #|| previous_changes.empty?
         ReactiveRecord::Broadcast.after_commit :create, self
       end
 
       def synchromesh_after_change
-        puts "\n\n\n\n\n\n\n\synchromesh_after_change\n\n\n\n\n"
+        Rails.logger.info "\n\n\n\n\n\n\n synchromesh_after_change\n\n\n\n\n"
         return if do_not_synchronize? || previous_changes.empty?
         ReactiveRecord::Broadcast.after_commit :change, self
       end
 
       def synchromesh_after_destroy
-        puts "\n\n\n\n\n\n\n\synchromesh_after_destroy\n\n\n\n\n"
+        Rails.logger.info "\n\n\n\n\n\n\n synchromesh_after_destroy\n\n\n\n\n"
         return if do_not_synchronize?
         ReactiveRecord::Broadcast.after_commit :destroy, self
       end
