@@ -2,6 +2,7 @@ module ReactiveRecord
   class Broadcast
 
     def self.after_commit(operation, model)
+      puts "\n\n\n\n\n\n\n\nReactiveRecord::Broadcast.after_commit --> \n operation - #{operation} \n model - #{model} \n\n\n\n\n"
       Hyperloop::InternalPolicy.regulate_broadcast(model) do |data|
         if !Hyperloop.on_server? && Hyperloop::Connection.root_path
           send_to_server(operation, data)
